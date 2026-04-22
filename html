@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Kitty Market - Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           1. CORE & VARIÁVEIS (PALETA EXTENDIDA)
+           ========================================= */
+        :root {
+            --hk-red: #ff3366;
+            --hk-red-soft: #ff5c8d;
+            --hk-pink-dark: #ff69b4;
+            --hk-pink-medium: #ffb6c1;
+            --hk-pink-light: #fff0f5;
+            --hk-bg: #fdfbfd;
+            --text-dark: #4a4a4a;
+            --text-gray: #7a7a7a;
+            --success: #4cd137;
+            --warning: #fbc531;
+            --info: #00a8ff;
+            
+            --shadow-float: 0 15px 35px rgba(255, 105, 180, 0.2);
+            --shadow-card: 0 10px 20px rgba(0,0,0,0.05);
+            --radius-btn: 50px;
+            --radius-card: 25px;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+
+        body {
+            background-color: var(--hk-bg);
+            background-image: 
+                radial-gradient(var(--hk-pink-medium) 1px, transparent 1px),
+                radial-gradient(var(--hk-pink-medium) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            padding-top: 90px;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar Personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--hk-pink-light); }
+        ::-webkit-scrollbar-thumb { background: var(--hk-pink-dark); border-radius: 10px; }
+
+        /* =========================================
+           2. HEADER (NAVBAR PREMIUM)
+           ========================================= */
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+            box-shadow: 0 5px 30px rgba(255, 182, 193, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+        .logo-img-small { width: 50px; height: auto; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
+        .logo-text { font-family: 'Fredoka One', cursive; color: var(--hk-pink-dark); font-size: 1.6rem; letter-spacing: 1px; }
+
+        .user-nav { display: flex; align-items: center; gap: 20px; }
+        
+        .nav-btn {
+            background: none; border: none; cursor: pointer; font-size: 1rem;
+            font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px;
+            padding: 8px 15px; border-radius: 20px; transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--hk-pink-light); color: var(--hk-pink-dark); }
+        
+        .nav-btn-login {
+            border: 2px solid var(--hk-pink-dark); color: var(--hk-pink-dark);
+            background: transparent; padding: 8px 25px; border-radius: 30px;
+            font-weight: bold; transition: 0.3s;
+        }
+        .nav-btn-login:hover { background: var(--hk-pink-dark); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4); }
+
+        .cart-trigger { position: relative; font-size: 1.6rem; background: none; border: none; cursor: pointer; transition: 0.3s; }
+        .cart-trigger:hover { transform: scale(1.1); }
+        .cart-badge {
+            position: absolute; top: -5px; right: -8px;
+            background: var(--hk-red); color: white;
+            font-size: 0.75rem; width: 22px; height: 22px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* =========================================
+           3. ESTRUTURA SPA & HOME
+           ========================================= */
+        .page-section { display: none; min-height: 100vh; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-container {
+            min-height: calc(100vh - 90px); 
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+                        url('https://i.pinimg.com/736x/28/62/1e/28621e86f38bbcba3ba4b12abf4b78df.jpg') center/cover no-repeat fixed;
+            margin-top: -90px; padding-top: 90px;
+        }
+
+        .hero-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .hero-logo-large { width: 300px; margin-bottom: 20px; filter: drop-shadow(0 15px 15px rgba(255,105,180,0.3)); animation: float 5s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--hk-pink-dark), var(--hk-red));
+            color: white; padding: 14px 40px; border-radius: var(--radius-btn);
+            font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 51, 102, 0.3); transition: all 0.3s;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 35px rgba(255, 51, 102, 0.5); }
+
+        .staff-footer {
+            width: 100%; background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid var(--hk-pink-medium); padding: 20px;
+            font-size: 0.9rem; color: var(--text-gray);
+            display: flex; justify-content: center; gap: 10px; align-items: center;
+        }
+
+        /* =========================================
+           4. LOJA & PRODUTOS
+           ========================================= */
+        .store-container { padding: 40px 5%; max-width: 1400px; margin: 0 auto; }
+        
+        .store-header-card {
+            background: white; border-radius: 30px; padding: 40px; text-align: center;
+            box-shadow: var(--shadow-float); border: 2px solid white; margin-bottom: 50px;
+            position: relative; overflow: hidden;
+        }
+        .store-header-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px;
+            background: repeating-linear-gradient(45deg, var(--hk-red), var(--hk-red) 20px, white 20px, white 40px);
+        }
+
+        .aisle-title {
+            background: var(--hk-pink-dark); color: white; padding: 10px 30px;
+            border-radius: 50px; display: inline-flex; align-items: center; gap: 10px;
+            margin: 50px 0 30px; font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; }
+
+        .product-card {
+            background: white; border-radius: var(--radius-card); padding: 25px;
+            text-align: center; position: relative; transition: all 0.4s ease;
+            box-shadow: var(--shadow-card); border: 2px solid transparent;
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: 100%;
+        }
+        .product-card:hover { transform: translateY(-10px); border-color: var(--hk-pink-medium); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .product-image { width: 100%; height: 160px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.05)); }
+        
+        .product-info h3 { font-size: 1.1rem; margin-bottom: 5px; color: var(--text-dark); }
+        .product-info small { color: var(--text-gray); font-size: 0.9rem; background: var(--hk-bg); padding: 4px 10px; border-radius: 10px; }
+        
+        .price-tag { font-size: 1.4rem; color: var(--hk-red); font-weight: 800; display: block; margin: 15px 0; }
+        
+        .admin-actions {
+            position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 10;
+        }
+        .btn-mini { 
+            width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; color: white; transition: 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .btn-edit { background: #4dabf7; } .btn-del { background: #ff4d4d; }
+        .btn-mini:hover { transform: scale(1.1); }
+
+        /* =========================================
+           5. MODAIS (RECIBO & UI)
+           ========================================= */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(45, 10, 30, 0.6); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+
+        .modal-box {
+            background: white; width: 90%; max-width: 500px; padding: 40px;
+            border-radius: 35px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh; overflow-y: auto;
+        }
+        .modal-overlay.open .modal-box { transform: scale(1); }
+
+        input, select { 
+            width: 100%; padding: 15px; margin-bottom: 15px; 
+            border: 2px solid var(--hk-pink-light); background: var(--hk-bg);
+            border-radius: 15px; outline: none; font-size: 1rem; transition: 0.3s;
+        }
+        input:focus, select:focus { border-color: var(--hk-pink-dark); background: white; box-shadow: 0 0 0 4px var(--hk-pink-light); }
+
+        /* Estilo Recibo de Compra */
+        .receipt-container {
+            background: #fffdf9; border: 1px solid #eee; padding: 25px; border-radius: 10px;
+            font-family: 'Courier New', monospace; margin-bottom: 20px;
+            position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+        }
+        .receipt-container::after {
+            content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 20px;
+            background: radial-gradient(circle, transparent 50%, #fffdf9 50%) top;
+            background-size: 20px 20px; transform: rotate(180deg);
+        }
+        
+        .receipt-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+        .receipt-divider { border-bottom: 2px dashed #ddd; margin: 15px 0; }
+        .receipt-total { font-weight: bold; font-size: 1.2rem; color: var(--text-dark); }
+        .region-badge { background: var(--hk-pink-light); color: var(--hk-pink-dark); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;}
+
+        /* Estilo Histórico de Pedidos */
+        .history-card {
+            background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid #eee; display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s;
+        }
+        .history-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: var(--hk-pink-medium); }
+        
+        .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .order-id { font-weight: bold; color: var(--text-dark); }
+        .order-date { font-size: 0.85rem; color: var(--text-gray); }
+        
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-shipping { background: #d1ecf1; color: #0c5460; }
+        .status-done { background: #d4edda; color: #155724; }
+
+        /* Carrinho Lateral */
+        .cart-sidebar {
+            position: fixed; top: 0; right: -450px; width: 400px; height: 100%;
+            background: white; z-index: 2500; box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); padding: 30px; 
+            display: flex; flex-direction: column;
+        }
+        .cart-sidebar.open { right: 0; }
+
+        .fab-admin {
+            position: fixed; bottom: 40px; right: 40px; width: 70px; height: 70px;
+            background: var(--hk-pink-dark); color: white; border-radius: 50%;
+            font-size: 2.2rem; display: none; align-items: center; justify-content: center;
+            border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 105, 180, 0.5); 
+            z-index: 1500; transition: 0.3s;
+        }
+        .fab-admin:hover { transform: scale(1.1) rotate(90deg); }
+
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo-area" onclick="router.navigate('home')">
+            <img src="logo.png.png" class="logo-img-small">
+            <span class="logo-text">Market</span>
+        </div>
+        <div id="nav-content" class="user-nav">
+            </div>
+    </header>
+
+    <section id="page-home" class="page-section active">
+        <div class="hero-container">
+            <div class="hero-content">
+                <img src="logo.png.png" class="hero-logo-large">
+                <h1 style="font-family: 'Fredoka One'; font-size: 3.5rem; color: var(--hk-pink-dark); margin-bottom: 10px;">Hello Kitty Market</h1>
+                <p style="font-size: 1.3rem; color: var(--text-gray); margin-bottom: 40px; max-width: 600px;">
+                    Faça suas compras com doçura e receba em casa! <br> Entregamos com amor em todas as regiões 🍓
+                </p>
+                <button class="btn-primary" onclick="router.navigate('store')">
+                    <span>🛍️</span> Começar a Comprar
+                </button>
+            </div>
+            <div class="staff-footer">
+                <span>🔒 Sistema Interno:</span>
+                <button onclick="ui.openModal('modal-login-admin')" style="background:none; border:none; text-decoration:underline; color:var(--hk-pink-dark); font-weight:bold; cursor:pointer;">
+                    Acesso Funcionário
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="page-store" class="page-section">
+        <div class="store-container">
+            <div class="store-header-card">
+                <img src="logo2.png.png" style="width: 180px;">
+                <div id="store-auth-ui" style="margin-top:20px;"></div>
+            </div>
+
+            <h2 class="aisle-title">🔥 Ofertas Especiais</h2>
+            <div id="grid-offers" class="products-grid"></div>
+
+            <h2 class="aisle-title">🍪 Corredor 1: Matinais</h2>
+            <div id="grid-aisle-1" class="products-grid"></div>
+
+            <h2 class="aisle-title">🥛 Corredor 2: Bebidas</h2>
+            <div id="grid-aisle-2" class="products-grid"></div>
+            
+            <h2 class="aisle-title">🍬 Corredor 3: Doces</h2>
+            <div id="grid-aisle-3" class="products-grid"></div>
+
+            <h2 class="aisle-title">🍎 Corredor 4: Frescos</h2>
+            <div id="grid-aisle-4" class="products-grid"></div>
+        </div>
+        <button id="admin-fab" class="fab-admin" onclick="ui.openProdModal()">+</button>
+    </section>
+
+    <div id="modal-login-client" class="modal-overlay">
+        <div class="modal-box">
+            <span onclick="ui.closeModals()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem;">×</span>
+            <div style="text-align:center;">
+                <h2 style="color:var(--hk-pink-dark); font-family:'Fredoka One'; margin-bottom:10px;">Login Cliente 🎀</h2>
+                <p style="color:#777; margin-bottom:25px;">Entre para encher seu carrinho!</p>
+            </div>
+            <form onsubmit="auth.loginClient(event)">
+                <input type="email" id="c-email" placeholder="Seu e-mail fofo" required>
+                <input type="password" id="c-pass" placeholder="Senha secreta" required>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Entrar</button>
+            </form>
+            <p style="text-align:center; margin-top:20px; cursor:pointer; font-size:0.9rem;" onclick="ui.switchModal('modal-login-client', 'modal-reg-client')">
+                Ainda não tem conta? <b style="color:var(--hk-pink-dark)">Criar agora</b>
+            </p>
+        </div>
+    </div>
+
+    <div id="modal-reg-client" class="modal-overlay">
+        <div class="modal-box">
+            <span onclick="ui.closeModals()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem;">×</span>
+            <div style="text-align:center;">
+                <h2 style="color:var(--hk-pink-dark); font-family:'Fredoka One'; margin-bottom:10px;">Bem-vinda(o)! ✨</h2>
+                <p style="color:#777; margin-bottom:25px;">Preencha para receber suas comprinhas</p>
+            </div>
+            <form onsubmit="auth.regClient(event)">
+                <input type="text" id="r-name" placeholder="Nome Completo" required>
+                <input type="email" id="r-email" placeholder="E-mail" required>
+                <input type="password" id="r-pass" placeholder="Senha" required>
+                <select id="r-region" required>
+                    <option value="">Selecione sua Região (Frete)</option>
+                    <option value="Norte">Zona Norte (R$ 15,00)</option>
+                    <option value="Sul">Zona Sul (R$ 10,00)</option>
+                    <option value="Centro">Centro (R$ 5,00)</option>
+                </select>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-checkout" class="modal-overlay">
+        <div class="modal-box" style="border-top: 5px solid var(--hk-red);">
+            <span onclick="ui.closeModals()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem;">×</span>
+            <h2 style="text-align:center; color:var(--text-dark); margin-bottom:5px;">Revisão do Pedido</h2>
+            <p style="text-align:center; color:#888; margin-bottom:20px; font-size:0.9rem;">Confira antes de finalizar</p>
+            
+            <div id="checkout-receipt" class="receipt-container">
+                </div>
+
+            <button onclick="checkout.confirmOrder()" class="btn-primary" style="width:100%; justify-content:center; background: #4cd137;">
+                ✅ Confirmar Compra
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-history" class="modal-overlay">
+        <div class="modal-box" style="max-width: 600px;">
+            <span onclick="ui.closeModals()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem;">×</span>
+            <h2 style="color:var(--hk-pink-dark); margin-bottom:20px; font-family:'Fredoka One';">Meus Pedidos 📦</h2>
+            <div id="history-list" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                </div>
+        </div>
+    </div>
+
+    <div id="modal-login-admin" class="modal-overlay">
+        <div class="modal-box" style="border: 2px solid var(--text-dark);">
+            <span onclick="ui.closeModals()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem;">×</span>
+            <h2 style="text-align:center; color:var(--text-dark); margin-bottom:20px;">Staff Access 🔒</h2>
+            <form onsubmit="auth.loginAdmin(event)">
+                <input type="email" id="a-email" placeholder="admin@hk.com" required>
+                <input type="password" id="a-pass" placeholder="Senha" required>
+                <button type="submit" class="btn-primary" style="width:100%; background:var(--text-dark);">Acessar Painel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-prod" class="modal-overlay">
+        <div class="modal-box">
+            <span onclick="ui.closeModals()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem;">×</span>
+            <h2 id="modal-prod-title" style="text-align:center; margin-bottom:20px;">Produto</h2>
+            <form onsubmit="store.saveProduct(event)">
+                <input type="hidden" id="p-id">
+                <input type="text" id="p-name" placeholder="Nome do Produto" required>
+                <input type="text" id="p-img" placeholder="URL da Imagem" required>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="p-weight" placeholder="Peso/Vol" required>
+                    <input type="number" step="0.01" id="p-price" placeholder="Preço (R$)" required>
+                </div>
+                <select id="p-aisle">
+                    <option value="1">Corredor 1 (Matinais)</option>
+                    <option value="2">Corredor 2 (Bebidas)</option>
+                    <option value="3">Corredor 3 (Doces)</option>
+                    <option value="4">Corredor 4 (Frescos)</option>
+                </select>
+                <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px; background:#f9f9f9; padding:10px; border-radius:10px;">
+                    <input type="checkbox" id="p-offer" style="width:auto; margin:0;"> Marcar como Oferta 🔥
+                </label>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content: center;">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="font-family:'Fredoka One'; color:var(--hk-pink-dark)">Meu Carrinho 🛒</h2>
+            <span onclick="ui.toggleCart()" style="cursor:pointer; font-size:1.5rem; color:#aaa;">→</span>
+        </div>
+        <div id="cart-items" style="flex:1; overflow-y:auto; margin:20px 0;"></div>
+        <div style="border-top:2px dashed #eee; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:1.2rem; font-weight:bold;">
+                <span>Subtotal:</span>
+                <span>R$ <span id="cart-subtotal">0.00</span></span>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-bottom:15px; text-align:right;">*Frete calculado no final</p>
+            <button class="btn-primary" style="width:100%; justify-content: center;" onclick="checkout.init()">
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO DE FRETE POR REGIÃO
+        const REGION_RATES = {
+            'Norte': 15.00,
+            'Sul': 10.00,
+            'Centro': 5.00
+        };
+
+        // --- DEMONSTRAÇÃO DE OPERADORES DO PROJETO ---
+// Simulação de cálculo de compra com operadores
+
+const operadoresDemo = () => {
+    let precoProduto = 50.00;
+    let quantidade = 3;
+
+    // Multiplicação
+    let subtotal = precoProduto * quantidade;
+
+    // Desconto com cupom (10%)
+    let cupomDesconto = 0.10;
+    let valorDesconto = subtotal * cupomDesconto;
+
+    // Subtração
+    let totalComDesconto = subtotal - valorDesconto;
+
+    // Frete fixo
+    let frete = 15;
+
+    // Soma
+    let totalFinal = totalComDesconto + frete;
+
+    console.log("Subtotal:", subtotal);
+    console.log("Desconto:", valorDesconto);
+    console.log("Total com desconto:", totalComDesconto);
+    console.log("Frete:", frete);
+    console.log("Total final:", totalFinal);
+
+    // Comparação (exemplo de operador lógico)
+    if (totalFinal > 100) {
+        console.log("Frete grátis aplicado!");
+    } else {
+        console.log("Frete cobrado normalmente.");
+    }
+};
+
+// --- 7. INTEGRAÇÃO COM APIs EXTERNAS ---
+const api = {
+
+    // 🔎 Buscar endereço pelo CEP (ViaCEP)
+    buscarCEP: async () => {
+        const cep = document.getElementById('r-cep').value;
+
+        if(cep.length < 8) return;
+
+        try {
+            const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await res.json();
+
+            if(data.erro) {
+                alert("CEP não encontrado 😢");
+                return;
+            }
+
+            document.getElementById('r-rua').value = data.logradouro;
+            document.getElementById('r-cidade').value = data.localidade;
+            document.getElementById('r-estado').value = data.uf;
+
+        } catch (err) {
+            console.error("Erro ao buscar CEP:", err);
+        }
+    },
+
+    // 👤 Buscar usuários da API (JSONPlaceholder)
+    carregarUsuarios: async () => {
+        try {
+            const res = await fetch('https://jsonplaceholder.typicode.com/users');
+            const users = await res.json();
+
+            console.log("Usuários da API:", users);
+
+            // Exemplo: mostrar no console ou usar no sistema
+            users.forEach(u => {
+                console.log(`Nome: ${u.name} | Email: ${u.email}`);
+            });
+
+        } catch (err) {
+            console.error("Erro ao carregar usuários:", err);
+        }
+    }
+};
+
+        // --- 1. BANCO DE DADOS (LOCALSTORAGE) ---
+        const db = {
+            init: () => {
+                // Usuários Iniciais
+                if(!localStorage.getItem('hk_users')) {
+                    const users = [
+                        {id: 1, name: "Admin Kitty", email: "admin@hk.com", pass: "123", role: "admin", region: "Centro"},
+                        {id: 2, name: "Maria Cliente", email: "maria@hk.com", pass: "123", role: "client", region: "Sul"}, 
+                        {id: 3, name: "João Silva", email: "joao@email.com", pass: "123", role: "client", region: "Norte"},
+                        {id: 4, name: "Ana Souza", email: "ana@email.com", pass: "123", role: "client", region: "Centro"},
+                        {id: 5, name: "Carlos Lima", email: "carlos@email.com", pass: "123", role: "client", region: "Sul"},
+                        {id: 6, name: "Fernanda Alves", email: "fernanda@email.com", pass: "123", role: "client", region: "Norte"},
+                        {id: 7, name: "Lucas Rocha", email: "lucas@email.com", pass: "123", role: "client", region: "Centro"},
+                        {id: 8, name: "Juliana Costa", email: "juliana@email.com", pass: "123", role: "client", region: "Sul"},
+                        {id: 9, name: "Pedro Henrique", email: "pedro@email.com", pass: "123", role: "client", region: "Norte"},
+                        {id: 10, name: "Camila Martins", email: "camila@email.com", pass: "123", role: "client", region: "Centro"},
+                        {id: 11, name: "Rafael Gomes", email: "rafael@email.com", pass: "123", role: "client", region: "Sul"},
+                        {id: 12, name: "Bruna Dias", email: "bruna@email.com", pass: "123", role: "client", region: "Norte"},
+                        {id: 13, name: "Gustavo Pereira", email: "gustavo@email.com", pass: "123", role: "client", region: "Centro"},
+                        {id: 14, name: "Patricia Nunes", email: "patricia@email.com", pass: "123", role: "client", region: "Sul"},
+                        {id: 15, name: "Felipe Cardoso", email: "felipe@email.com", pass: "123", role: "client", region: "Norte"},
+                        {id: 16, name: "Aline Ribeiro", email: "aline@email.com", pass: "123", role: "client", region: "Centro"},
+                        {id: 17, name: "Diego Barros", email: "diego@email.com", pass: "123", role: "client", region: "Sul"},
+                        {id: 18, name: "Larissa Teixeira", email: "larissa@email.com", pass: "123", role: "client", region: "Norte"},
+                        {id: 19, name: "Marcelo Pinto", email: "marcelo@email.com", pass: "123", role: "client", region: "Centro"},
+                        {id: 20, name: "Vanessa Freitas", email: "vanessa@email.com", pass: "123", role: "client", region: "Sul"}
+];
+                    
+                    localStorage.setItem('hk_users', JSON.stringify(users));
+                }
+                // Produtos Iniciais
+                if(!localStorage.getItem('hk_products')) {
+                    const prods = [
+                        {id: 101, name: "Cereal HK", price: 18.90, weight: "300g", img: "https://via.placeholder.com/150", offer: true, aisle: 1},
+                        {id: 102, name: "Leite Morango", price: 6.50, weight: "1L", img: "https://via.placeholder.com/150", offer: false, aisle: 2},
+                        {id: 103, name: "Biscoito Fofo", price: 5.00, weight: "150g", img: "https://via.placeholder.com/150", offer: true, aisle: 3},
+                        {id: 104, name: "Maçã Fuji", price: 4.50, weight: "Kg", img: "https://via.placeholder.com/150", offer: false, aisle: 4},
+                        {id: 105, name: "Bolo Rosa", price: 25.00, weight: "500g", img: "https://via.placeholder.com/150", offer: true, aisle: 3},
+                        {id: 106, name: "Arroz Branco", price: 22.00, weight: "5kg", img: "https://via.placeholder.com/150", offer: false, aisle: 1},
+                        {id: 107, name: "Feijão Preto", price: 8.50, weight: "1kg", img: "https://via.placeholder.com/150", offer: false, aisle: 1},
+                        {id: 108, name: "Refrigerante Cola", price: 7.99, weight: "2L", img: "https://via.placeholder.com/150", offer: true, aisle: 2},
+                        {id: 109, name: "Suco Laranja", price: 5.99, weight: "1L", img: "https://via.placeholder.com/150", offer: false, aisle: 2},
+                        {id: 110, name: "Chocolate Barra", price: 6.00, weight: "100g", img: "https://via.placeholder.com/150", offer: true, aisle: 3},
+
+                        {id: 111, name: "Banana", price: 3.99, weight: "Kg", img: "https://via.placeholder.com/150", offer: false, aisle: 4},
+                        {id: 112, name: "Tomate", price: 6.50, weight: "Kg", img: "https://via.placeholder.com/150", offer: false, aisle: 4},
+                        {id: 113, name: "Pão de Forma", price: 7.00, weight: "500g", img: "https://via.placeholder.com/150", offer: false, aisle: 1},
+                        {id: 114, name: "Café", price: 12.00, weight: "500g", img: "https://via.placeholder.com/150", offer: true, aisle: 1},
+                        {id: 115, name: "Água Mineral", price: 2.50, weight: "500ml", img: "https://via.placeholder.com/150", offer: false, aisle: 2},
+   
+                        {id: 116, name: "Balas Sortidas", price: 4.00, weight: "200g", img: "https://via.placeholder.com/150", offer: true, aisle: 3},
+                        {id: 117, name: "Sorvete", price: 15.00, weight: "1L", img: "https://via.placeholder.com/150", offer: false, aisle: 3},
+                        {id: 118, name: "Alface", price: 2.99, weight: "Un", img: "https://via.placeholder.com/150", offer: false, aisle: 4},
+                        {id: 119, name: "Cenoura", price: 3.50, weight: "Kg", img: "https://via.placeholder.com/150", offer: false, aisle: 4},
+                        {id: 120, name: "Queijo Mussarela", price: 10.00, weight: "300g", img: "https://via.placeholder.com/150", offer: true, aisle: 2}
+];
+                   
+                    localStorage.setItem('hk_products', JSON.stringify(prods));
+                }
+                // Pedidos Iniciais (Vazio)
+                if(!localStorage.getItem('hk_orders')) {
+                    localStorage.setItem('hk_orders', JSON.stringify([]));
+                }
+            },
+            getUsers: () => JSON.parse(localStorage.getItem('hk_users')),
+            saveUser: (u) => {
+                const list = db.getUsers();
+                list.push(u);
+                localStorage.setItem('hk_users', JSON.stringify(list));
+            },
+            getProducts: () => JSON.parse(localStorage.getItem('hk_products')),
+            saveProduct: (p) => {
+                const list = db.getProducts();
+                const idx = list.findIndex(x => x.id == p.id);
+                if(idx >= 0) list[idx] = p;
+                else list.push(p);
+                localStorage.setItem('hk_products', JSON.stringify(list));
+            },
+            delProduct: (id) => {
+                const list = db.getProducts().filter(x => x.id !== id);
+                localStorage.setItem('hk_products', JSON.stringify(list));
+            },
+            // NOVAS FUNÇÕES PARA PEDIDOS
+            getOrders: (userId) => {
+                const all = JSON.parse(localStorage.getItem('hk_orders'));
+                if(userId) return all.filter(o => o.userId === userId);
+                return all;
+            },
+            saveOrder: (order) => {
+                const list = JSON.parse(localStorage.getItem('hk_orders'));
+                list.unshift(order); // Adiciona no começo (mais recente)
+                localStorage.setItem('hk_orders', JSON.stringify(list));
+            }
+        };
+
+        // --- 2. AUTENTICAÇÃO ---
+        const auth = {
+            user: null,
+            init: () => {
+                const s = sessionStorage.getItem('hk_session');
+                if(s) auth.user = JSON.parse(s);
+                ui.renderNav();
+                ui.renderStoreHeader();
+            },
+            loginClient: (e) => {
+                e.preventDefault();
+                const email = document.getElementById('c-email').value;
+                const pass = document.getElementById('c-pass').value;
+                const found = db.getUsers().find(u => u.email === email && u.pass === pass && u.role === 'client');
+                if(found) auth.createSession(found);
+                else alert("Email ou senha incorretos 😢");
+            },
+            regClient: (e) => {
+                e.preventDefault();
+                const user = {
+                    id: Date.now(),
+                    name: document.getElementById('r-name').value,
+                    email: document.getElementById('r-email').value,
+                    pass: document.getElementById('r-pass').value,
+                    role: 'client',
+                    region: document.getElementById('r-region').value // Salva a região!
+                };
+                db.saveUser(user);
+                auth.createSession(user);
+                alert("Conta criada com sucesso! 🍓");
+            },
+            loginAdmin: (e) => {
+                e.preventDefault();
+                const email = document.getElementById('a-email').value;
+                const pass = document.getElementById('a-pass').value;
+                const found = db.getUsers().find(u => u.email === email && u.pass === pass && u.role === 'admin');
+                if(found) auth.createSession(found);
+                else alert("Acesso restrito.");
+            },
+            createSession: (u) => {
+                auth.user = u;
+                sessionStorage.setItem('hk_session', JSON.stringify(u));
+                ui.closeModals();
+                ui.renderNav();
+                ui.renderStoreHeader();
+                router.navigate('store');
+            },
+            logout: () => {
+                auth.user = null;
+                sessionStorage.removeItem('hk_session');
+                location.reload();
+            }
+        };
+
+        // --- 3. LOJA ---
+        const store = {
+            render: () => {
+                const prods = db.getProducts();
+                const isAdmin = auth.user && auth.user.role === 'admin';
+                
+                // Limpa grids
+                document.getElementById('grid-offers').innerHTML = '';
+                [1,2,3,4].forEach(n => document.getElementById(`grid-aisle-${n}`).innerHTML = '');
+
+                prods.forEach(p => {
+                    const html = `
+                        <div class="product-card">
+                            ${isAdmin ? `
+                                <div class="admin-actions">
+                                    <button class="btn-mini btn-edit" onclick="ui.openProdModal(${p.id})">✎</button>
+                                    <button class="btn-mini btn-del" onclick="store.del(${p.id})">🗑</button>
+                                </div>` : ''
+                            }
+                            <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center;">
+                                <img src="${p.img}" class="product-image" onerror="this.src='https://via.placeholder.com/150'">
+                                <div class="product-info">
+                                    <h3>${p.name}</h3>
+                                    <small>${p.weight}</small>
+                                </div>
+                                <span class="price-tag">R$ ${parseFloat(p.price).toFixed(2)}</span>
+                            </div>
+                            <button class="btn-primary" style="width:100%; justify-content:center; padding: 10px;" onclick="cart.add(${p.id})">Adicionar</button>
+                        </div>
+                    `;
+                    
+                    if(p.offer) document.getElementById('grid-offers').innerHTML += html;
+                    else {
+                        const aisle = p.aisle || 1;
+                        document.getElementById(`grid-aisle-${aisle}`).innerHTML += html;
+                    }
+                });
+            },
+            saveProduct: (e) => {
+                e.preventDefault();
+                const p = {
+                    id: document.getElementById('p-id').value || Date.now(),
+                    name: document.getElementById('p-name').value,
+                    img: document.getElementById('p-img').value,
+                    weight: document.getElementById('p-weight').value,
+                    price: document.getElementById('p-price').value,
+                    aisle: document.getElementById('p-aisle').value,
+                    offer: document.getElementById('p-offer').checked
+                };
+                db.saveProduct(p);
+                ui.closeModals();
+                store.render();
+            },
+            del: (id) => {
+                if(confirm("Tem certeza que deseja remover este item?")) {
+                    db.delProduct(id);
+                    store.render();
+                }
+            }
+        };
+
+        // --- 4. CARRINHO ---
+        const cart = {
+            items: [],
+            add: (id) => {
+                if(!auth.user || auth.user.role !== 'client') {
+                    ui.openModal('modal-login-client');
+                    return;
+                }
+                const p = db.getProducts().find(x => x.id == id);
+                cart.items.push(p);
+                cart.update();
+                ui.toggleCart(true); // Abre o carrinho ao adicionar
+            },
+            update: () => {
+                const list = document.getElementById('cart-items');
+                list.innerHTML = '';
+                let subtotal = 0;
+                
+                if(cart.items.length === 0) {
+                    list.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:50px;">Seu carrinho está vazio 🍃</p>';
+                }
+
+                cart.items.forEach((item, idx) => {
+                    subtotal += parseFloat(item.price);
+                    list.innerHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#f9f9f9; padding:10px; border-radius:10px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <img src="${item.img}" style="width:40px; height:40px; object-fit:contain;">
+                                <div>
+                                    <p style="font-size:0.9rem; font-weight:bold;">${item.name}</p>
+                                    <small>R$ ${item.price}</small>
+                                </div>
+                            </div>
+                            <span onclick="cart.rem(${idx})" style="color:var(--hk-red); cursor:pointer; font-weight:bold; padding:5px;">×</span>
+                        </div>
+                    `;
+                });
+                document.getElementById('cart-subtotal').innerText = subtotal.toFixed(2);
+                document.querySelector('.cart-badge').innerText = cart.items.length;
+            },
+            rem: (idx) => {
+                cart.items.splice(idx, 1);
+                cart.update();
+            },
+            getSubtotal: () => {
+                return cart.items.reduce((sum, item) => sum + parseFloat(item.price), 0);
+            },
+            clear: () => {
+                cart.items = [];
+                cart.update();
+            }
+        };
+
+        // --- 5. CHECKOUT & HISTÓRICO (LÓGICA NOVA) ---
+        const checkout = {
+            tempOrder: null,
+
+            // Passo 1: Calcular e Mostrar Recibo
+            init: () => {
+                if(cart.items.length === 0) return alert("Adicione itens ao carrinho primeiro!");
+                
+                const userRegion = auth.user.region || 'Centro'; // Fallback
+                const freight = REGION_RATES[userRegion] || 5.00;
+                const subtotal = cart.getSubtotal();
+                const total = subtotal + freight;
+
+                // Gerar HTML do Recibo
+                let itemsHtml = cart.items.map(i => `
+                    <div class="receipt-line">
+                        <span>${i.name}</span>
+                        <span>R$ ${parseFloat(i.price).toFixed(2)}</span>
+                    </div>
+                `).join('');
+
+                const receiptHtml = `
+                    <div style="margin-bottom:15px;">${itemsHtml}</div>
+                    <div class="receipt-divider"></div>
+                    <div class="receipt-line">
+                        <span>Subtotal:</span>
+                        <span>R$ ${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="receipt-line" style="color:var(--hk-pink-dark);">
+                        <span>Frete (<span class="region-badge">${userRegion}</span>):</span>
+                        <span>+ R$ ${freight.toFixed(2)}</span>
+                    </div>
+                    <div class="receipt-divider"></div>
+                    <div class="receipt-line receipt-total">
+                        <span>TOTAL:</span>
+                        <span>R$ ${total.toFixed(2)}</span>
+                    </div>
+                `;
+
+                document.getElementById('checkout-receipt').innerHTML = receiptHtml;
+
+                // Preparar objeto do pedido temporariamente
+                checkout.tempOrder = {
+                    id: '#' + Math.floor(Math.random() * 1000000),
+                    userId: auth.user.id,
+                    date: new Date().toLocaleString('pt-BR'),
+                    items: [...cart.items],
+                    subtotal: subtotal,
+                    freight: freight,
+                    region: userRegion,
+                    total: total,
+                    status: 'Em Separação' // Status inicial
+                };
+
+                ui.toggleCart(); // Fecha lateral
+                ui.openModal('modal-checkout'); // Abre modal recibo
+            },
+
+            // Passo 2: Confirmar e Salvar no Banco
+            confirmOrder: () => {
+                if(!checkout.tempOrder) return;
+
+                db.saveOrder(checkout.tempOrder);
+                
+                cart.clear();
+                ui.closeModals();
+                alert(`Pedido ${checkout.tempOrder.id} Confirmado! 🍓\nObrigado por comprar no Hello Kitty Market!`);
+                checkout.tempOrder = null;
+            },
+
+            // Renderizar Histórico
+            renderHistory: () => {
+                if(!auth.user) return;
+                const orders = db.getOrders(auth.user.id);
+                const container = document.getElementById('history-list');
+                container.innerHTML = '';
+
+                if(orders.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#aaa; padding:20px;">Você ainda não fez nenhum pedido.</p>';
+                    return;
+                }
+
+                orders.forEach(o => {
+                    // Define cor do badge
+                    let statusClass = 'status-pending';
+                    if(o.status === 'Enviado') statusClass = 'status-shipping';
+                    if(o.status === 'Entregue') statusClass = 'status-done';
+
+                    container.innerHTML += `
+                        <div class="history-card">
+                            <div class="history-header">
+                                <span class="order-id">${o.id}</span>
+                                <span class="order-date">${o.date}</span>
+                            </div>
+                            <div style="font-size:0.9rem; color:#555;">
+                                <p>Items: ${o.items.length} produtos</p>
+                                <p>Frete: ${o.region} (R$ ${o.freight.toFixed(2)})</p>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                                <span style="font-weight:bold; color:var(--hk-red);">R$ ${o.total.toFixed(2)}</span>
+                                <span class="status-badge ${statusClass}">${o.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                ui.openModal('modal-history');
+            }
+        };
+
+        // --- 6. UI CONTROLLER ---
+        const ui = {
+            renderNav: () => {
+                const nav = document.getElementById('nav-content');
+                if(auth.user) {
+                    const firstName = auth.user.name.split(' ')[0];
+                    
+                    if(auth.user.role === 'client') {
+                        nav.innerHTML = `
+                            <button class="nav-btn" onclick="checkout.renderHistory()">
+                                <span>📦</span> Meus Pedidos
+                            </button>
+                            <span style="font-weight:600; color:var(--hk-pink-dark)">Olá, ${firstName}</span>
+                            <button class="cart-trigger" onclick="ui.toggleCart()">
+                                🛒<span class="cart-badge">0</span>
+                            </button>
+                            <button onclick="auth.logout()" style="border:none; background:none; color:#ff4d4d; font-weight:bold; cursor:pointer; font-size:0.9rem;">Sair</button>
+                        `;
+                    } else {
+                        // Admin
+                        nav.innerHTML = `
+                            <span style="background:var(--text-dark); color:white; padding:5px 15px; border-radius:20px; font-size:0.85rem">Admin: ${firstName}</span>
+                            <button onclick="auth.logout()" style="border:none; background:none; color:#ff4d4d; font-weight:bold; cursor:pointer;">Sair</button>
+                        `;
+                    }
+                    
+                    document.getElementById('admin-fab').style.display = auth.user.role === 'admin' ? 'flex' : 'none';
+                } else {
+                    nav.innerHTML = `<button class="nav-btn-login" onclick="ui.openModal('modal-login-client')">Login / Entrar</button>`;
+                    document.getElementById('admin-fab').style.display = 'none';
+                }
+                store.render();
+            },
+            
+            renderStoreHeader: () => {
+                const container = document.getElementById('store-auth-ui');
+                if(auth.user) {
+                    container.innerHTML = `
+                        <p style="color:var(--text-gray); font-size:1.1rem;">Que bom ver você, <b style="color:var(--hk-pink-dark)">${auth.user.name}</b>!</p>
+                        <p style="font-size:0.9rem; color:#aaa; margin-top:5px;">Região de Entrega: <b>${auth.user.region || 'Padrão'}</b></p>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <p style="color:var(--text-gray); margin-bottom:15px;">Faça login para finalizar suas compras e ganhar pontos!</p>
+                        <button class="nav-btn-login" onclick="ui.openModal('modal-login-client')">
+                            Acessar Minha Conta
+                        </button>
+                    `;
+                }
+            },
+
+            openModal: (id) => {
+                ui.closeModals();
+                const m = document.getElementById(id);
+                m.classList.add('open');
+            },
+            closeModals: () => document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')),
+            switchModal: (a, b) => { ui.closeModals(); setTimeout(() => ui.openModal(b), 100); }, // Pequeno delay para transição suave
+            
+            toggleCart: (forceOpen = false) => {
+                const sb = document.getElementById('cart-sidebar');
+                if(forceOpen) sb.classList.add('open');
+                else sb.classList.toggle('open');
+            },
+            
+            openProdModal: (id=null) => {
+                // Reset form
+                document.getElementById('p-id').value = "";
+                document.getElementById('p-name').value = "";
+                document.getElementById('p-img').value = "";
+                document.getElementById('p-price').value = "";
+                document.getElementById('p-weight').value = "";
+                document.getElementById('p-offer').checked = false;
+
+                if(id) {
+                    const p = db.getProducts().find(x => x.id == id);
+                    if(p) {
+                        document.getElementById('p-id').value = p.id;
+                        document.getElementById('p-name').value = p.name;
+                        document.getElementById('p-img').value = p.img;
+                        document.getElementById('p-price').value = p.price;
+                        document.getElementById('p-weight').value = p.weight || p.peso;
+                        document.getElementById('p-aisle').value = p.aisle || 1;
+                        document.getElementById('p-offer').checked = p.offer;
+                    }
+                }
+                ui.openModal('modal-prod');
+            }
+        };
+
+        const router = {
+            navigate: (p) => {
+                document.querySelectorAll('.page-section').forEach(x => x.classList.remove('active'));
+                document.getElementById('page-'+p).classList.add('active');
+                window.scrollTo(0,0);
+            }
+        };
+
+        // INICIALIZAÇÃO
+        window.onload = () => {
+            db.init();
+            auth.init();
+        
+            //API
+            window.onload = () => {
+    db.init();
+    auth.init();
+
+    api.carregarUsuarios(); // 👈 AQUI
+
+    if(!auth.user) router.navigate('home');
+    else router.navigate('store');
+};
+            // Redireciona baseado no login
+            if(!auth.user) router.navigate('home');
+            else router.navigate('store');
+        };
+    </script>
+</body>
+</html>
